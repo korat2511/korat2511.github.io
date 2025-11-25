@@ -157,3 +157,381 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+
+
+// calculate and display dynamic months for experience duration
+const durationElements = document.querySelectorAll(".duration-months");
+
+function calculateMonths(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = endDate === "current" ? new Date() : new Date(endDate);
+  
+  const years = end.getFullYear() - start.getFullYear();
+  const months = end.getMonth() - start.getMonth();
+  
+  const totalMonths = years * 12 + months;
+  
+  return totalMonths;
+}
+
+// update all duration elements
+durationElements.forEach(element => {
+  const startDate = element.getAttribute("data-start-date");
+  const endDate = element.getAttribute("data-end-date");
+  const months = calculateMonths(startDate, endDate);
+  
+  element.textContent = `${months} Month${months !== 1 ? 's' : ''}`;
+});
+
+
+
+// project gallery modal variables
+const projectGalleryLinks = document.querySelectorAll("[data-project-gallery]");
+const projectModalContainer = document.querySelector("[data-project-modal-container]");
+const projectOverlay = document.querySelector("[data-project-overlay]");
+const projectModalCloseBtn = document.querySelector("[data-project-modal-close-btn]");
+const galleryContent = document.querySelector("[data-gallery-content]");
+const galleryIndicators = document.querySelector("[data-gallery-indicators]");
+const galleryPrevBtn = document.querySelector("[data-gallery-prev]");
+const galleryNextBtn = document.querySelector("[data-gallery-next]");
+const galleryTitle = document.querySelector(".gallery-title");
+
+// Project images arrays
+const projectImages = {
+  "core-pmc": {
+    title: "CORE PMC",
+    subtitle: "Mobile Application Screenshots",
+    images: [
+      "./assets/images/PMC_1.png",
+      "./assets/images/PMC_2.png",
+      "./assets/images/PMC_3.png",
+      "./assets/images/PMC_4.png",
+      "./assets/images/PMC_5.png",
+      "./assets/images/PMC_6.png",
+      "./assets/images/PMC_7.png",
+      "./assets/images/PMC_8.png",
+      "./assets/images/PMC_9.png",
+      "./assets/images/PMC_10.png",
+      "./assets/images/PMC_11.png"
+    ]
+  },
+  "hotel-app": {
+    title: "Hotel App",
+    subtitle: "Mobile Application Screenshots",
+    images: [
+      "./assets/images/HM_1.jpeg",
+      "./assets/images/HM_2.jpeg",
+      "./assets/images/HM_3.jpeg",
+      "./assets/images/HM_4.jpeg",
+      "./assets/images/HM_5.jpeg",
+      "./assets/images/HM_5.1.jpeg",
+      "./assets/images/HM_6.jpeg",
+      "./assets/images/HM_7.jpeg",
+      "./assets/images/HM_8.jpeg",
+      "./assets/images/HM_9.jpeg",
+      "./assets/images/HM_10.jpeg",
+      "./assets/images/HM_11.jpeg",
+      "./assets/images/HM_12.jpeg",
+      "./assets/images/HM_13.jpeg",
+      "./assets/images/HM_14.jpeg"
+    ]
+  }
+};
+
+let currentImageIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+let isModalOpening = false;
+
+// function to show image at index
+function showImage(index) {
+  const images = galleryContent.querySelectorAll("img");
+  const indicators = galleryIndicators.querySelectorAll(".gallery-indicator");
+  
+  if (images.length === 0) return;
+  
+  // Update current index
+  currentImageIndex = index;
+  if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+  if (currentImageIndex >= images.length) currentImageIndex = 0;
+  
+  // Update images
+  images.forEach((img, i) => {
+    img.classList.remove("active");
+    if (i === currentImageIndex) {
+      img.classList.add("active");
+    }
+  });
+  
+  // Update indicators
+  indicators.forEach((indicator, i) => {
+    indicator.classList.remove("active");
+    if (i === currentImageIndex) {
+      indicator.classList.add("active");
+    }
+  });
+}
+
+// function to go to next image
+function nextImage() {
+  showImage(currentImageIndex + 1);
+}
+
+// function to go to previous image
+function previousImage() {
+  showImage(currentImageIndex - 1);
+}
+
+// function to open project gallery
+function openProjectGallery(projectId) {
+  isModalOpening = true;
+  
+  const project = projectImages[projectId];
+  if (!project) return;
+  
+  // Update gallery title
+  if (galleryTitle) {
+    galleryTitle.textContent = project.title;
+  }
+  const gallerySubtitle = document.querySelector(".gallery-subtitle");
+  if (gallerySubtitle) {
+    gallerySubtitle.textContent = project.subtitle;
+  }
+  
+  // Clear previous content
+  galleryContent.innerHTML = "";
+  galleryIndicators.innerHTML = "";
+  
+  // Add all project images to gallery
+  project.images.forEach((imageSrc, index) => {
+    const img = document.createElement("img");
+    img.src = imageSrc;
+    img.alt = `${project.title} Screenshot ${index + 1}`;
+    img.loading = "lazy";
+    if (index === 0) img.classList.add("active");
+    galleryContent.appendChild(img);
+    
+    // Create indicator
+    const indicator = document.createElement("button");
+    indicator.className = "gallery-indicator";
+    if (index === 0) indicator.classList.add("active");
+    indicator.setAttribute("data-indicator-index", index);
+    indicator.addEventListener("click", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      showImage(index);
+    });
+    galleryIndicators.appendChild(indicator);
+  });
+  
+  // Reset to first image
+  currentImageIndex = 0;
+  
+  // Show modal
+  projectModalContainer.classList.add("active");
+  projectOverlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+  
+  // Setup swipe events after content is created
+  setupSwipeEvents();
+  
+  // Setup navigation buttons
+  setupNavigationButtons();
+  
+  // Prevent immediate closing
+  setTimeout(() => {
+    isModalOpening = false;
+  }, 300);
+}
+
+// Setup navigation buttons function
+function setupNavigationButtons() {
+  const prevBtn = document.querySelector("[data-gallery-prev]");
+  const nextBtn = document.querySelector("[data-gallery-next]");
+  
+  // Remove old listeners by cloning
+  if (prevBtn && !prevBtn.hasAttribute("data-listener-attached")) {
+    prevBtn.setAttribute("data-listener-attached", "true");
+    prevBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      previousImage();
+    });
+  }
+  
+  if (nextBtn && !nextBtn.hasAttribute("data-listener-attached")) {
+    nextBtn.setAttribute("data-listener-attached", "true");
+    nextBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      nextImage();
+    });
+  }
+}
+
+// Setup swipe events function
+function setupSwipeEvents() {
+  const content = document.querySelector("[data-gallery-content]");
+  if (!content) return;
+  
+  // Remove any existing listeners by using once option or check if already attached
+  let isDragging = false;
+  let startX = 0;
+  
+  // Touch events for mobile swipe
+  content.addEventListener("touchstart", function(e) {
+    e.stopPropagation();
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  
+  content.addEventListener("touchend", function(e) {
+    e.stopPropagation();
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+  
+  // Mouse drag for desktop
+  content.addEventListener("mousedown", function(e) {
+    e.stopPropagation();
+    isDragging = true;
+    startX = e.pageX;
+  });
+  
+  content.addEventListener("mousemove", function(e) {
+    if (!isDragging) return;
+    e.stopPropagation();
+  });
+  
+  content.addEventListener("mouseup", function(e) {
+    if (!isDragging) return;
+    e.stopPropagation();
+    isDragging = false;
+    const endX = e.pageX;
+    const swipeDistance = startX - endX;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        nextImage();
+      } else {
+        previousImage();
+      }
+    }
+  });
+  
+  content.addEventListener("mouseleave", function() {
+    isDragging = false;
+  });
+}
+
+// function to close project gallery
+function closeProjectGallery() {
+  if (isModalOpening) return;
+  projectModalContainer.classList.remove("active");
+  projectOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+  currentImageIndex = 0;
+}
+
+// Swipe detection
+function handleSwipe() {
+  const swipeDistance = touchStartX - touchEndX;
+  const minSwipeDistance = 50;
+  
+  if (Math.abs(swipeDistance) > minSwipeDistance) {
+    if (swipeDistance > 0) {
+      // Swipe left - next image
+      nextImage();
+    } else {
+      // Swipe right - previous image
+      previousImage();
+    }
+  }
+}
+
+// add click event to all project gallery links
+projectGalleryLinks.forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const projectId = this.getAttribute("data-project-gallery");
+    // Use setTimeout to ensure the click event has fully processed
+    setTimeout(() => {
+      openProjectGallery(projectId);
+    }, 10);
+  });
+});
+
+// add click event to close button
+if (projectModalCloseBtn) {
+  projectModalCloseBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    closeProjectGallery();
+  });
+}
+
+// add click event to overlay - close when clicking overlay
+if (projectOverlay) {
+  projectOverlay.addEventListener("click", function(e) {
+    if (isModalOpening) return;
+    e.stopPropagation();
+    closeProjectGallery();
+  });
+}
+
+// Prevent modal container from closing when clicking on modal content
+if (projectModalContainer) {
+  projectModalContainer.addEventListener("click", function(e) {
+    if (isModalOpening) return;
+    // If clicking on the container itself (not on any child), close
+    if (e.target === projectModalContainer) {
+      closeProjectGallery();
+    }
+  });
+}
+
+// Prevent ALL clicks inside modal from closing it (but allow touch events)
+const projectGalleryModal = document.querySelector(".project-gallery-modal");
+if (projectGalleryModal) {
+  projectGalleryModal.addEventListener("click", function(e) {
+    // Don't prevent default on touch events
+    if (e.type !== "touchstart" && e.type !== "touchmove" && e.type !== "touchend") {
+      e.stopPropagation();
+    }
+  });
+}
+
+// Navigation buttons - set up initially and when modal opens
+if (galleryPrevBtn) {
+  galleryPrevBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    previousImage();
+  });
+}
+
+if (galleryNextBtn) {
+  galleryNextBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    nextImage();
+  });
+}
+
+// Initial setup - will be called when modal opens
+// Swipe events are now set up in setupSwipeEvents() function
+
+// Keyboard navigation
+document.addEventListener("keydown", (e) => {
+  if (!projectModalContainer || !projectModalContainer.classList.contains("active")) return;
+  
+  if (e.key === "ArrowLeft") {
+    previousImage();
+  } else if (e.key === "ArrowRight") {
+    nextImage();
+  } else if (e.key === "Escape") {
+    closeProjectGallery();
+  }
+});
