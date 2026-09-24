@@ -146,6 +146,8 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
     for (let i = 0; i < pages.length; i++) {
       if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
+        pages[i].classList.remove("active");
+        void pages[i].offsetWidth; // Trigger reflow to replay sleek entrance animations
         pages[i].classList.add("active");
         navigationLinks[i].classList.add("active");
         window.scrollTo(0, 0);
@@ -199,9 +201,21 @@ const galleryTitle = document.querySelector(".gallery-title");
 
 // Project images arrays
 const projectImages = {
+  "attendex": {
+    title: "AttendEx",
+    subtitle: "Staff Attendance & Business Management Application",
+    description: "Developed AttendEx, a staff attendance and business management application designed for contractors, shop owners, and small businesses. The app streamlines attendance tracking, salary and advance management, and daily cashbook operations with features like bulk attendance marking, automated salary calculations, expense tracking, financial summaries, and PDF-ready labor reports for efficient workforce and business management.",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.originlab.attendex",
+    images: [
+      "./assets/images/attendex-logo.jpg"
+    ]
+  },
   "core-pmc": {
     title: "CORE PMC",
-    subtitle: "Mobile Application Screenshots",
+    subtitle: "Construction Management & Project Analytics Platform",
+    description: "Developing and maintaining a mobile application along with an admin panel for CORE PROJECTS (Surat, India). Responsible for enhancing user experience, monitoring analytics, fixing bugs, and continuously improving features.",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.corepmc.core_pmc",
+    iosUrl: "https://apps.apple.com/us/app/core-pmc/id6751482084",
     images: [
       "./assets/images/PMC_1.png",
       "./assets/images/PMC_2.png",
@@ -218,7 +232,8 @@ const projectImages = {
   },
   "hotel-app": {
     title: "Hotel App",
-    subtitle: "Mobile Application Screenshots",
+    subtitle: "Hotel Booking & Guest Experience Management",
+    description: "Feature-rich mobile hotel booking and guest experience management application designed for seamless customer check-ins, room reservations, and service tracking.",
     images: [
       "./assets/images/HM_1.jpeg",
       "./assets/images/HM_2.jpeg",
@@ -297,6 +312,32 @@ function openProjectGallery(projectId) {
   const gallerySubtitle = document.querySelector(".gallery-subtitle");
   if (gallerySubtitle) {
     gallerySubtitle.textContent = project.subtitle;
+  }
+  const galleryDesc = document.querySelector("[data-gallery-desc]");
+  if (galleryDesc) {
+    galleryDesc.textContent = project.description || "";
+  }
+  const galleryLinks = document.querySelector("[data-gallery-links]");
+  if (galleryLinks) {
+    galleryLinks.innerHTML = "";
+    if (project.androidUrl) {
+      const androidLink = document.createElement("a");
+      androidLink.href = project.androidUrl;
+      androidLink.target = "_blank";
+      androidLink.rel = "noopener noreferrer";
+      androidLink.className = "gallery-store-btn";
+      androidLink.innerHTML = `<ion-icon name="logo-google-playstore"></ion-icon> <span>Google Play</span>`;
+      galleryLinks.appendChild(androidLink);
+    }
+    if (project.iosUrl) {
+      const iosLink = document.createElement("a");
+      iosLink.href = project.iosUrl;
+      iosLink.target = "_blank";
+      iosLink.rel = "noopener noreferrer";
+      iosLink.className = "gallery-store-btn";
+      iosLink.innerHTML = `<ion-icon name="logo-apple"></ion-icon> <span>App Store</span>`;
+      galleryLinks.appendChild(iosLink);
+    }
   }
   
   // Clear previous content
@@ -534,4 +575,140 @@ document.addEventListener("keydown", (e) => {
   } else if (e.key === "Escape") {
     closeProjectGallery();
   }
+});
+
+
+/*-----------------------------------*\
+  #ANIMATION ENHANCEMENTS
+\*-----------------------------------*/
+
+// 1. Dynamic Typewriter Effect for Sidebar Role Title
+const typedTextSpan = document.querySelector(".typed-text");
+if (typedTextSpan) {
+  const roles = [
+    "Product Manager & Mobile App Specialist",
+    "Flutter & Dart Specialist",
+    "IT Consultant & Software Developer",
+    "Firebase & Cloud Integrator"
+  ];
+  let roleIndex = 0;
+  let charIndex = roles[0].length;
+  let isDeleting = true;
+  let typingSpeed = 90;
+
+  function typeRole() {
+    const currentRole = roles[roleIndex];
+    if (isDeleting) {
+      typedTextSpan.textContent = currentRole.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 45;
+    } else {
+      typedTextSpan.textContent = currentRole.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 85;
+    }
+
+    if (!isDeleting && charIndex === currentRole.length) {
+      typingSpeed = 2200; // Pause when full text is typed
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+      typingSpeed = 400; // Pause before typing next word
+    }
+
+    setTimeout(typeRole, typingSpeed);
+  }
+
+  // Start typewriter rotation after initial 2 second display
+  setTimeout(typeRole, 2000);
+}
+
+// 2. Interactive 3D Card Tilt with Perspective
+const tiltCards = document.querySelectorAll(".service-item, .content-card, .project-card, .project-item > a");
+
+tiltCards.forEach(card => {
+  card.addEventListener("mousemove", function (e) {
+    if (window.innerWidth < 768) return;
+
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -6;
+    const rotateY = ((x - centerX) / centerX) * 6;
+
+    this.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-5px)`;
+  });
+
+  card.addEventListener("mouseleave", function () {
+    this.style.transform = "";
+  });
+});
+
+// 3. Ripple Effect for Interactive Buttons
+const rippleTargets = document.querySelectorAll(".form-btn, .navbar-link, .filter-item button, .info_more-btn, .modal-close-btn, .project-btn");
+
+rippleTargets.forEach(button => {
+  button.addEventListener("click", function (e) {
+    const circle = document.createElement("span");
+    circle.classList.add("ripple-effect");
+
+    const rect = this.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    circle.style.width = circle.style.height = `${size}px`;
+    circle.style.left = `${e.clientX - rect.left - size / 2}px`;
+    circle.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+    const existingRipple = this.querySelector(".ripple-effect");
+    if (existingRipple) {
+      existingRipple.remove();
+    }
+
+    this.appendChild(circle);
+
+    setTimeout(() => {
+      circle.remove();
+    }, 600);
+  });
+});
+
+// 4. Multi-Theme Accent Switcher
+const themeButtons = document.querySelectorAll("[data-theme-set]");
+
+function applyTheme(themeName) {
+  if (!themeName) themeName = "cyan";
+  document.documentElement.setAttribute("data-theme", themeName);
+  try {
+    localStorage.setItem("portfolio-theme", themeName);
+  } catch (err) {
+    // ignore if storage disabled
+  }
+
+  themeButtons.forEach(btn => {
+    if (btn.getAttribute("data-theme-set") === themeName) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+}
+
+// Initialize theme from localStorage or default to 'cyan'
+let initialTheme = "cyan";
+try {
+  initialTheme = localStorage.getItem("portfolio-theme") || "cyan";
+} catch (err) {
+  initialTheme = "cyan";
+}
+applyTheme(initialTheme);
+
+themeButtons.forEach(btn => {
+  btn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const selectedTheme = this.getAttribute("data-theme-set");
+    applyTheme(selectedTheme);
+  });
 });
