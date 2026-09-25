@@ -19,25 +19,26 @@
 
   /**
    * modern high-tech themes
-   * Default: Electric Cyan & Tech Indigo
+   * Theme: Emerald Matrix (Green Accent)
    */
 
-  --primary-accent: #00d2ff;
-  --primary-accent-rgb: 0, 210, 255;
-  --secondary-accent: #818cf8;
-  --secondary-accent-rgb: 129, 140, 248;
-  --tertiary-accent: #c084fc;
-  --accent-glow: rgba(0, 210, 255, 0.35);
-  --accent-glow-subtle: rgba(0, 210, 255, 0.12);
-  --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #6366f1 100%);
-  --text-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  --primary-accent: #10b981;
+  --primary-accent-rgb: 16, 185, 129;
+  --secondary-accent: #059669;
+  --secondary-accent-rgb: 5, 150, 105;
+  --tertiary-accent: #34d399;
+  --tertiary-accent-rgb: 52, 211, 153;
+  --accent-glow: rgba(16, 185, 129, 0.35);
+  --accent-glow-subtle: rgba(16, 185, 129, 0.12);
+  --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --text-gradient: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
 
   /* Base & Surfaces - Deep Obsidian / Midnight Slate */
   --bg-base: #070a13;
   --bg-card: rgba(15, 23, 42, 0.78);
   --bg-card-hover: rgba(22, 33, 58, 0.9);
   --border-card: rgba(148, 163, 184, 0.14);
-  --border-card-hover: rgba(0, 210, 255, 0.4);
+  --border-card-hover: rgba(16, 185, 129, 0.4);
 
   /* Solid Colors */
   --jet: rgba(148, 163, 184, 0.14);
@@ -55,8 +56,8 @@
   --orange-yellow-crayola: var(--primary-accent);
   --vegas-gold: var(--secondary-accent);
   --text-gradient-yellow: var(--text-gradient);
-  --bg-gradient-yellow-1: linear-gradient(to bottom right, var(--primary-accent) 0%, rgba(129, 140, 248, 0) 50%);
-  --bg-gradient-yellow-2: linear-gradient(135deg, var(--accent-glow) 0%, rgba(129, 140, 248, 0) 60%), #0f172a;
+  --bg-gradient-yellow-1: linear-gradient(to bottom right, var(--primary-accent) 0%, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0) 50%);
+  --bg-gradient-yellow-2: linear-gradient(135deg, var(--accent-glow) 0%, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0) 60%), #0f172a;
   --bg-gradient-onyx: linear-gradient(to bottom right, #1e293b 3%, #0f172a 97%);
   --bg-gradient-jet: linear-gradient(to bottom right, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.85) 100%), #0b1120;
   --border-gradient-onyx: linear-gradient(to bottom right, rgba(148, 163, 184, 0.22) 0%, rgba(148, 163, 184, 0.03) 50%);
@@ -189,8 +190,8 @@ html { font-family: var(--ff-poppins); }
 body {
   background: var(--smoky-black);
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(var(--primary-accent-rgb, 0, 210, 255), 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(var(--secondary-accent-rgb, 129, 140, 248), 0.08) 0%, transparent 45%);
+    radial-gradient(circle at 15% 15%, rgba(var(--primary-accent-rgb, 16, 185, 129), 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0.08) 0%, transparent 45%);
   background-attachment: fixed;
   color: var(--light-gray);
   min-height: 100vh;
@@ -2163,16 +2164,41 @@ textarea.form-input::-webkit-resizer { display: none; }
     z-index: 1;
   }
 
-  .sidebar-info { flex-direction: column; }
+  .sidebar-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .avatar-box {
+    margin: 0 auto;
+  }
 
   .avatar-box img { width: 150px; }
+
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
 
   .info-content .name {
     white-space: nowrap;
     text-align: center;
+    margin-bottom: 12px;
   }
 
-  .info-content .title { margin: auto; }
+  .info-content .title {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .status-badge {
+    margin: 12px auto 0;
+    align-self: center;
+  }
 
   .info_more-btn { display: none; }
 
@@ -2239,7 +2265,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 .glow-2 {
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(var(--secondary-accent-rgb, 129, 140, 248), 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0.25) 0%, transparent 70%);
   bottom: -150px;
   right: -100px;
   animation: floatOrb2 25s ease-in-out infinite alternate;
@@ -2248,7 +2274,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 .glow-3 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(192, 132, 252, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--tertiary-accent-rgb, 52, 211, 153), 0.18) 0%, transparent 70%);
   top: 35%;
   left: 55%;
   opacity: 0.12;
@@ -2325,9 +2351,10 @@ textarea.form-input::-webkit-resizer { display: none; }
 .status-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin-top: 10px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   background: hsla(145, 63%, 42%, 0.12);
   border: 1px solid hsla(145, 63%, 49%, 0.3);
   border-radius: 20px;
@@ -2336,6 +2363,12 @@ textarea.form-input::-webkit-resizer { display: none; }
   font-weight: var(--fw-500);
   letter-spacing: 0.3px;
   transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.status-badge span {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .status-badge:hover {
@@ -2641,8 +2674,8 @@ article.active .contact-form { animation-delay: 0.18s; }
   align-items: center;
   gap: 8px;
   padding: 8px 18px;
-  background: linear-gradient(135deg, rgba(var(--primary-accent-rgb, 0, 210, 255), 0.12) 0%, rgba(var(--secondary-accent-rgb, 129, 140, 248), 0.1) 100%);
-  border: 1px solid rgba(var(--primary-accent-rgb, 0, 210, 255), 0.28);
+  background: linear-gradient(135deg, rgba(var(--primary-accent-rgb, 16, 185, 129), 0.12) 0%, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0.1) 100%);
+  border: 1px solid rgba(var(--primary-accent-rgb, 16, 185, 129), 0.28);
   color: var(--white-1);
   border-radius: 20px;
   font-size: var(--fs-6);
@@ -2674,22 +2707,22 @@ article.active .contact-form { animation-delay: 0.18s; }
   transform: translateY(-4px) scale(1.05);
   border-color: var(--primary-accent);
   box-shadow: 0 8px 24px var(--accent-glow);
-  background: linear-gradient(135deg, rgba(var(--primary-accent-rgb, 0, 210, 255), 0.22) 0%, rgba(var(--secondary-accent-rgb, 129, 140, 248), 0.18) 100%);
+  background: linear-gradient(135deg, rgba(var(--primary-accent-rgb, 16, 185, 129), 0.22) 0%, rgba(var(--secondary-accent-rgb, 5, 150, 105), 0.18) 100%);
 }
 
 .skill-chip .chip-pct {
   font-size: 11px;
   font-weight: 600;
-  background: rgba(var(--primary-accent-rgb, 0, 210, 255), 0.2);
+  background: rgba(var(--primary-accent-rgb, 16, 185, 129), 0.2);
   color: var(--primary-accent);
-  border: 1px solid rgba(var(--primary-accent-rgb, 0, 210, 255), 0.3);
+  border: 1px solid rgba(var(--primary-accent-rgb, 16, 185, 129), 0.3);
   padding: 2px 8px;
   border-radius: 10px;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .skill-chip:hover .chip-pct {
-  background: rgba(var(--primary-accent-rgb, 0, 210, 255), 0.35);
+  background: rgba(var(--primary-accent-rgb, 16, 185, 129), 0.35);
   transform: scale(1.05);
 }
 
@@ -2824,8 +2857,8 @@ article.active .contact-form { animation-delay: 0.18s; }
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(var(--primary-accent-rgb, 0, 210, 255), 0.1);
-  border: 1px solid rgba(var(--primary-accent-rgb, 0, 210, 255), 0.25);
+  background: rgba(var(--primary-accent-rgb, 16, 185, 129), 0.1);
+  border: 1px solid rgba(var(--primary-accent-rgb, 16, 185, 129), 0.25);
   color: var(--primary-accent);
   font-size: 11px;
   padding: 4px 10px;
@@ -2858,9 +2891,9 @@ article.active .contact-form { animation-delay: 0.18s; }
 }
 
 .project-btn.store-btn {
-  background: rgba(var(--primary-accent-rgb, 0, 210, 255), 0.12);
+  background: rgba(var(--primary-accent-rgb, 16, 185, 129), 0.12);
   color: var(--white-1);
-  border: 1px solid rgba(var(--primary-accent-rgb, 0, 210, 255), 0.3);
+  border: 1px solid rgba(var(--primary-accent-rgb, 16, 185, 129), 0.3);
 }
 
 .project-btn.store-btn:hover {

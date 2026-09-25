@@ -675,40 +675,8 @@ rippleTargets.forEach(button => {
   });
 });
 
-// 4. Multi-Theme Accent Switcher
-const themeButtons = document.querySelectorAll("[data-theme-set]");
-
-function applyTheme(themeName) {
-  if (!themeName) themeName = "cyan";
-  document.documentElement.setAttribute("data-theme", themeName);
-  try {
-    localStorage.setItem("portfolio-theme", themeName);
-  } catch (err) {
-    // ignore if storage disabled
-  }
-
-  themeButtons.forEach(btn => {
-    if (btn.getAttribute("data-theme-set") === themeName) {
-      btn.classList.add("active");
-    } else {
-      btn.classList.remove("active");
-    }
-  });
-}
-
-// Initialize theme from localStorage or default to 'cyan'
-let initialTheme = "cyan";
+// 4. Fixed Theme Accent: Green (Emerald Matrix)
+document.documentElement.setAttribute("data-theme", "emerald");
 try {
-  initialTheme = localStorage.getItem("portfolio-theme") || "cyan";
-} catch (err) {
-  initialTheme = "cyan";
-}
-applyTheme(initialTheme);
-
-themeButtons.forEach(btn => {
-  btn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    const selectedTheme = this.getAttribute("data-theme-set");
-    applyTheme(selectedTheme);
-  });
-});
+  localStorage.setItem("portfolio-theme", "emerald");
+} catch (err) {}
