@@ -368,12 +368,12 @@ main {
 
 .sidebar {
   margin-bottom: 15px;
-  max-height: 112px;
+  max-height: 160px;
   overflow: hidden;
   transition: var(--transition-2);
 }
 
-.sidebar.active { max-height: 405px; }
+.sidebar.active { max-height: 480px; }
 
 .sidebar-info {
   position: relative;
@@ -386,6 +386,13 @@ main {
 .avatar-box {
   background: var(--bg-gradient-onyx);
   border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  min-width: 0;
+  flex: 1;
+  padding-right: 20px;
 }
 
 .info-content .name {
@@ -393,7 +400,10 @@ main {
   font-size: var(--fs-3);
   font-weight: var(--fw-500);
   letter-spacing: -0.25px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info-content .title {
@@ -401,9 +411,19 @@ main {
   background: var(--onyx);
   font-size: var(--fs-8);
   font-weight: var(--fw-300);
-  width: max-content;
-  padding: 3px 12px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 10px;
   border-radius: 8px;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 38px;
+  box-sizing: border-box;
 }
 
 .info_more-btn {
@@ -1664,9 +1684,26 @@ textarea.form-input::-webkit-resizer { display: none; }
 
   .avatar-box img { width: 120px; }
 
-  .info-content .name { margin-bottom: 15px; }
+  .info-content {
+    padding-right: 0;
+  }
 
-  .info-content .title { padding: 5px 18px; }
+  .info-content .name {
+    margin-bottom: 15px;
+    overflow: visible;
+  }
+
+  .info-content .title {
+    padding: 5px 18px;
+    min-height: unset;
+    display: inline-block;
+  }
+
+  .status-badge {
+    gap: 8px;
+    margin-top: 10px;
+    padding: 5px 14px;
+  }
 
   .info_more-btn {
     top: -30px;
@@ -2330,9 +2367,9 @@ textarea.form-input::-webkit-resizer { display: none; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 5px 14px;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 10px;
   background: hsla(145, 63%, 42%, 0.12);
   border: 1px solid hsla(145, 63%, 49%, 0.3);
   border-radius: 20px;
@@ -2342,6 +2379,8 @@ textarea.form-input::-webkit-resizer { display: none; }
   letter-spacing: 0.3px;
   transition: all 0.3s ease;
   width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .status-badge span {
@@ -2382,8 +2421,9 @@ textarea.form-input::-webkit-resizer { display: none; }
 
 /* 4. Typewriter text & Cursor blink */
 .typed-text {
-  display: inline-block;
-  min-height: 1.2em;
+  display: inline;
+  word-break: normal;
+  overflow-wrap: break-word;
   transition: color 0.2s ease;
 }
 
@@ -2393,6 +2433,7 @@ textarea.form-input::-webkit-resizer { display: none; }
   font-weight: 300;
   animation: blinkCursor 0.85s infinite;
   margin-left: 2px;
+  vertical-align: baseline;
 }
 
 @keyframes blinkCursor {
